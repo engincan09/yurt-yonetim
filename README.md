@@ -1,4 +1,4 @@
-# yurt-yonetim
+
 Yurt yönetim sistemi
 
 Öğrenci yurtları için tasarlanmış erp bazında yapılmış bir yönetim sistemidir.
