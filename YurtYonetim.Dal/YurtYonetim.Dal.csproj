@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="EfCore\Seed\Users\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\YurtYonetim-Entity\YurtYonetim.Entity.csproj" />
+
+  </ItemGroup>
+
+</Project>
