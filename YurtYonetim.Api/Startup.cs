@@ -21,14 +21,16 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
 using System.Reflection;
-using Microsoft.AspNet.OData.Builder;
 using System.Globalization;
 using YurtYonetim.Bll.Helpers.Handlers;
-using Microsoft.AspNet.OData.Extensions;
 using System;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Coravel;
 using YurtYonetim.Dal.Middleware;
+using YurtYonetim.Bll.EntityCore.Abstract.Systems;
+using YurtYonetim.Bll.EntityCore.Concrete.Systems;
+using YurtYonetim.Bll.EntityCore.Abstract.Users;
+using YurtYonetim.Bll.EntityCore.Concrete.Users;
 
 namespace YurtYonetim.Api
 {
@@ -119,18 +121,18 @@ namespace YurtYonetim.Api
             services.AddApiVersioning(options =>
             {
                 options.ReportApiVersions = true;
-                options.ApiVersionReader = new HeaderApiVersionReader("api-version"); // bundan dolayı header'da api-version 1.0 veriyoz
+                options.ApiVersionReader = new HeaderApiVersionReader("api-version");
             });
 
-            services.AddSwaggerGen(
-                options =>
-                {
-                    // add a custom operation filter which sets default values
-                    options.OperationFilter<SwaggerDefaultValues>();
-                    options.CustomSchemaIds(type => type.ToString() + type.GetHashCode());
-                    // integrate xml comments
-                    options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml"));
-                });
+            //services.AddSwaggerGen(
+            //    options =>
+            //    {
+            //        // add a custom operation filter which sets default values
+            //        options.OperationFilter<SwaggerDefaultValues>();
+            //        options.CustomSchemaIds(type => type.ToString() + type.GetHashCode());
+            //        // integrate xml comments
+            //        options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml"));
+            //    });
 
             services.AddSpaStaticFiles(configuration =>
             {
@@ -148,10 +150,7 @@ namespace YurtYonetim.Api
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="modelBuilder"></param>
-        /// <param name="provider"></param>
-        /// <param name="zktEcoService"></param>
-        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, VersionedODataModelBuilder modelBuilder, IApiVersionDescriptionProvider provider)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -182,19 +181,13 @@ namespace YurtYonetim.Api
             });
 
             app.UseResponseCaching();
-
             app.UseMiddleware<ErrorHandler>();
-
             app.Use(next => context => { context.Request.EnableRewind(); return next(context); });
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                         name: "default",
                         template: "{controller}/{action=Index}/{id?}");
-                routes.EnableDependencyInjection();
-                routes.SetTimeZoneInfo(TimeZoneInfo.Utc);
-                routes.Select().Expand().Filter().OrderBy().MaxTop(null).Count();
             });
 
             if (!env.IsDevelopment())
@@ -204,29 +197,39 @@ namespace YurtYonetim.Api
                 });
 
             app.UseSwagger();
-            app.UseSwaggerUI(
-                options =>
-                {
-                    // Sayfadaki öğelerin expand özelliğini kapatır. Sayfa boyutunu düşürmek ve donmaları önlemek için.
-                    options.DocExpansion(DocExpansion.List);
-                    // build a swagger endpoint for each discovered API version
-                    foreach (var description in provider.ApiVersionDescriptions)
-                    {
-                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-                    }
-                });
+            //app.UseSwaggerUI(
+            //    options =>
+            //    {
+            //        // Sayfadaki öğelerin expand özelliğini kapatır. Sayfa boyutunu düşürmek ve donmaları önlemek için.
+            //        options.DocExpansion(DocExpansion.List);
+            //        // build a swagger endpoint for each discovered API version
+            //        foreach (var description in provider.ApiVersionDescriptions)
+            //        {
+            //            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+            //        }
+            //    });
 
             #region Tüm Scheduler İşlemleri
 
-            app.ApplicationServices.UseScheduler(scheduler =>
-            {
-               
-            });
+     
             #endregion Tüm Scheduler İşlemleri
         }
 
         private static void _addServices(ref IServiceCollection services)
         {
+            #region Systems
+            services.AddScoped<ICustomHttpContextAccessor, CustomHttpContextAccessor>();
+            services.AddScoped<ILookupRepository, LookupRepository>();
+            services.AddScoped<ILookupTypeRepository, LookupTypeRepository>();
+            services.AddScoped<IPageRepository, PageRepository>();
+            services.AddScoped<IPagePermissionRepository, PagePermissionRepository>();
+            #endregion
+
+            #region User
+            services.AddScoped<IRoleRepository,RoleRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            #endregion
         }
     }
 }

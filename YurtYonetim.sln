@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YurtYonetim.UI", "YurtYonetim-UI\YurtYonetim.UI.csproj", "{F6F99398-4639-43ED-B8CC-56E0902F1D14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YurtYonetim.UI", "YurtYonetim-UI\YurtYonetim.UI.csproj", "{F6F99398-4639-43ED-B8CC-56E0902F1D14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YurtYonetim.Entity", "YurtYonetim-Entity\YurtYonetim.Entity.csproj", "{B501E9E1-3119-4AA4-8226-2DF0DCB80866}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YurtYonetim.Entity", "YurtYonetim-Entity\YurtYonetim.Entity.csproj", "{B501E9E1-3119-4AA4-8226-2DF0DCB80866}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YurtYonetim.Dal", "YurtYonetim.Dal\YurtYonetim.Dal.csproj", "{BB1F98F5-855C-4E25-BE49-3C05CFD4E7DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YurtYonetim.Dal", "YurtYonetim.Dal\YurtYonetim.Dal.csproj", "{BB1F98F5-855C-4E25-BE49-3C05CFD4E7DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YurtYonetim.Bll", "YurtYonetim.Bll\YurtYonetim.Bll.csproj", "{66462960-479C-4FB8-9D7F-590F4ADA1E55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YurtYonetim.Bll", "YurtYonetim.Bll\YurtYonetim.Bll.csproj", "{66462960-479C-4FB8-9D7F-590F4ADA1E55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YurtYonetim.Api", "YurtYonetim.Api\YurtYonetim.Api.csproj", "{52DC0E07-3ADE-4A70-BC01-C63248AED4DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YurtYonetim.Api", "YurtYonetim.Api\YurtYonetim.Api.csproj", "{52DC0E07-3ADE-4A70-BC01-C63248AED4DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YurtYonetim.Dto", "YurtYonetim.Dto\YurtYonetim.Dto.csproj", "{0877330F-4312-4E80-A90C-696586706578}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{52DC0E07-3ADE-4A70-BC01-C63248AED4DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52DC0E07-3ADE-4A70-BC01-C63248AED4DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52DC0E07-3ADE-4A70-BC01-C63248AED4DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0877330F-4312-4E80-A90C-696586706578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0877330F-4312-4E80-A90C-696586706578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0877330F-4312-4E80-A90C-696586706578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0877330F-4312-4E80-A90C-696586706578}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

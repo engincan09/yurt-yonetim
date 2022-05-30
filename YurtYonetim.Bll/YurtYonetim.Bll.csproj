@@ -5,12 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="EntityCore\Abstract\Systems\" />
-    <Folder Include="EntityCore\Concrete\Systems\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\YurtYonetim.Dal\YurtYonetim.Dal.csproj" />
+    <ProjectReference Include="..\YurtYonetim.Dto\YurtYonetim.Dto.csproj" />
   </ItemGroup>
 
 </Project>
