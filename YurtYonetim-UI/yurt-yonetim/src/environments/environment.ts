@@ -10,9 +10,9 @@ export const environment = {
   isRequesting: false,
   isLoading:false,
   api: <Api>{
-    endpoint: 'http://localhost:####/api',
+    endpoint: 'http://localhost:25558/api',
     token: `${name}-dashboard`,
-    contentRootPath: 'http://localhost:####/api/docs/',
+    contentRootPath: 'http://localhost:25558/api/docs/',
   },
 };
 

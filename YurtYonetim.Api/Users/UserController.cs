@@ -157,7 +157,7 @@ namespace YurtYonetim.Api.Users
                                            && a.DataStatus == DataStatus.DeActivated)
                                       .FirstOrDefault();
             if (pasifUser != null)
-                return BadRequest(new Response(false, "Kullanıcınız pasif durumdadır. Sistem yöneticiniz ile irtibata geçiniz"));
+                return Ok(new Response(false, "Kullanıcınız pasif durumdadır. Sistem yöneticiniz ile irtibata geçiniz"));
 
             var user = _service.FindBy(a =>
                                               (a.Email == login.Email || a.Username == login.Email)
@@ -173,7 +173,7 @@ namespace YurtYonetim.Api.Users
                                       .FirstOrDefault();
 
             if (user == null)
-                return BadRequest(new Response(false, "Mevcut parolanız ile girdiğiniz parolanız eşleşmedi."));
+                return Ok(new Response(false, "Mevcut parolanız ile girdiğiniz parolanız eşleşmedi."));
 
             var userRoleId = _userRoleRepository.FindBy(a => a.UserId == user.Id && a.DataStatus == DataStatus.Activated)
                     .Select(a => a.RoleId).Distinct().ToArray();

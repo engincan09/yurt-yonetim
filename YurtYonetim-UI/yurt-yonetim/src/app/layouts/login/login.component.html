@@ -1,3 +1,209 @@
-<p>
-  login works!
-</p>
+<!-- <div class="login-screen row">
+    <div class="col-md-6 login-content">
+        <div class="d-flex flex-column mb-3">
+            <div>
+                <img *ngIf="!env.isSueno" class="logo" src="../../../assets/img/ptt-pal.png">
+                <img *ngIf="env.isSueno" class="logo" src="https://www.sueno.com.tr/images/logo-left.png">
+            </div>
+            <ng-container *ngIf="env.isRequesting">
+                <div class="spinner-box">
+                    <div class="circle-border">
+                        <div class="circle-core"></div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!env.isRequesting">
+                <div class="my-auto">
+                    <div class="display-4 title-content"> {{title}} <br> Yönetim Paneline Hoş Geldiniz
+                    </div>
+                    <div class="h5 text-muted mb-5">Devam etmek için lütfen giriş yapınız.</div>
+
+                    <form role="form" [formGroup]="loginForm" (ngSubmit)="login()" #formDir="ngForm"
+                        class="login-input-group pt-md-5 mx-xs-auto mx-md-0">
+                        <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+                            {{errorMessage}}
+                        </div>
+                        <div *ngIf="successMessage" class="alert alert-success" role="alert">
+                            {{successMessage}}
+                        </div>
+                        <div class="login-form">
+                            <div class="position-relative mb-2">
+                                <i class="fa fa-user"></i>
+                                <input type="text" class="form-control" formControlName="email"
+                                    placeholder="Kullanıcı adı" required="required">
+                                <small class="text-danger"
+                                    *ngIf="(email.hasError('required') && (email.touched || formDir.submitted))">
+                                    Kullanıcı adı alanı
+                                    boş
+                                    bırakılamaz
+                                </small>
+                                <small class="text-danger"
+                                    *ngIf="(email.hasError('email') && (email.touched || formDir.submitted))">
+                                    Lütfen geçerli bir mail adresi giriniz.
+                                </small>
+                            </div>
+                            <div class="position-relative mb-2">
+                                <i class="fa fa-lock"></i>
+                                <input type="password" class="form-control" formControlName="password"
+                                    placeholder="Parola" required="required">
+                                <small class="text-danger"
+                                    *ngIf="(password.hasError('required') && (password.touched || formDir.submitted))">
+                                    Parola
+                                    alanı boş bırakılamaz
+                                </small>
+                            </div>
+                        </div>
+                        <a class="text-muted m-3 m-md-0 float-right pr-3 forget" href="javascript:;"
+                            (click)="isForgetPw = !isForgetPw">Parolamı Unuttum</a>
+
+                        <div class="clearfix"></div>
+
+
+                        <div *ngIf="isForgetPw" class="alert alert-warning mt-2" role="alert">
+                            Parolanızı yönetim biriminden talep edebilirsiniz.
+                        </div>
+                        <div class="d-none d-md-block" style="height: 30px;"></div>
+                        <div class="d-flex mt-4">
+                            <button type="submit" (click)="login()" class="btn login-btn login-submit-button">Giriş
+                                Yap</button>
+                        </div>
+                    </form>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="col-md-6 login-bg d-none d-md-block">
+        <div class="login-image">
+            <object data="assets/img/login-bg.svg" type="image/svg+xml"></object>
+        </div>
+    </div>
+    <div class="col-12"><small class="ml-2 ml-md-5 pl-md-4 mt-md-5 pt-md-4 d-block">© {{year}} InsoftPro</small></div>
+</div> -->
+
+<div class="d-flex flex-column flex-root" style="height: 100vh;">
+  <div class="login login-2 login-signin-on d-flex flex-column flex-column-fluid bg-white position-relative overflow-hidden"
+      id="kt_login">
+      <div class="login-header py-10 flex-column-auto">
+          <div
+              class="container d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
+              <a href="#" class="flex-column-auto py-5 py-md-0">
+                  <img *ngIf="logoUrl" class="logo" style="height: 70px;"
+                      [src]="env.api.contentRootPath + 'images/h_70/' + logoUrl">
+                  <!-- <img *ngIf="env.isSueno" class="logo h-50px" src="../../../assets/img/deluxe_right_menu_logo.png"> -->
+              </a>
+          </div>
+      </div>
+      <div class="login-body d-flex flex-column-fluid align-items-stretch justify-content-center my-md-5 my-3">
+          <div class="container row">
+              <div class="col-lg-6 d-flex align-items-center">
+                  <div class="login-form login-signin">
+                      <ng-container *ngIf="env.isRequesting">
+                          <div
+                              class="form w-xxl-550px rounded-lg p-3 p-md-5 fv-plugins-bootstrap fv-plugins-framework">
+                              <div class="spinner-box my-3">
+                                  <div class="circle-border">
+                                      <div class="circle-core"></div>
+                                  </div>
+                              </div>
+                          </div>
+
+                      </ng-container>
+                      <ng-container *ngIf="!env.isRequesting">
+                          <form [formGroup]="loginForm" (ngSubmit)="login()" (keydown)="loginEnter($event)"
+                              #formDir="ngForm"
+                              class="form w-xxl-550px rounded-lg p-3 p-md-5 fv-plugins-bootstrap fv-plugins-framework"
+                              id="kt_login_signin_form">
+                              <div class="pb-13 pt-lg-0 pt-5 d-none d-md-block">
+                                  <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
+                                      {{title}}
+                                  </h3>
+                                  <div class="h5 text-muted">Yönetim Paneline Hoş Geldiniz</div>
+                                  <!-- <div class="h5 text-muted mb-2">Devam etmek için lütfen giriş yapınız.</div> -->
+                              </div>
+                              <div *ngIf="errorMessage" class="alert alert-danger w-100 mb-2" role="alert">
+                                  {{errorMessage}}
+                              </div>
+                              <div *ngIf="successMessage" class="alert alert-success w-100 mb-2" role="alert">
+                                  {{successMessage}}
+                              </div>
+
+                              <div class="form-group fv-plugins-icon-container">
+                                  <label class="font-size-h6 font-weight-bolder text-dark text-left d-block">Kullanıcı
+                                      Adı*</label>
+                                  <input class="form-control form-control-solid h-auto rounded-lg" type="text"
+                                      formControlName="email" autocomplete="off" required>
+                                  <div class="fv-plugins-message-container">
+                                      <small class="text-danger"
+                                          *ngIf="(email.hasError('required') && (formDir.submitted))">
+                                          Kullanıcı adı alanı
+                                          boş
+                                          bırakılamaz
+                                      </small>
+                                      <!-- <small class="text-danger"
+                                          *ngIf="(email.hasError('email') && (email.touched || formDir.submitted))">
+                                          Lütfen geçerli bir mail adresi giriniz.
+                                      </small> -->
+                                  </div>
+
+                              </div>
+                              <div class="form-group fv-plugins-icon-container">
+                                  <div class="d-flex justify-content-between mt-n5">
+                                      <label
+                                          class="font-size-h6 font-weight-bolder text-dark pt-5 w-auto">Parola*</label>
+                                      <a href="javascript:;" (click)="isForgetPw = !isForgetPw"
+                                          class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5 w-100 text-right"
+                                          id="kt_login_forgot">Parolanızı mı unuttunuz ?</a>
+                                  </div>
+                                  <input class="form-control form-control-solid h-auto rounded-lg" type="password"
+                                      formControlName="password" autocomplete="off" required>
+                                  <div class="fv-plugins-message-container">
+                                      <small class="text-danger"
+                                          *ngIf="(password.hasError('required') && (password.touched || formDir.submitted))">
+                                          Parola
+                                          alanı boş bırakılamaz
+                                      </small>
+
+                                      <div *ngIf="isForgetPw" class="alert alert-warning mt-2" role="alert">
+                                          Parolanızı yönetim biriminden talep edebilirsiniz.
+                                      </div>
+
+
+                                  </div>
+                              </div>
+                              <div class="pb-lg-0 pb-5">
+                                  <button type="button" id="kt_login_signin_submit"
+                                      class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-2 my-3 mr-3"
+                                      (click)="login()">Giriş
+                                      Yap</button>
+                              </div>
+                              <div></div>
+                          </form>
+                      </ng-container>
+                  </div>
+
+              </div>
+              <div class="col-lg-6 d-none d-md-block bgi-size-contain bgi-no-repeat bgi-position-y-center bgi-position-x-center min-h-150px mt-10 m-md-0"
+                  style="background-image: url(./../../assets/img/login-bg.svg)">
+              </div>
+          </div>
+      </div>
+
+      <div class="login-footer footer py-10 mt-3 mt-md-5 flex-column-auto">
+          <div
+              class="container d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
+              <div class="font-size-h6 font-weight-bolder order-2 order-md-1 py-2 py-md-0">
+                  <span class="text-muted font-weight-bold mr-2">{{year}}©</span>
+                  <a href="https://insoftpro.com/" target="_blank"
+                      class="text-dark-50 text-hover-primary">Yurt Yönetim Sistemi</a>
+              </div>
+              <div class="font-size-h5 font-weight-bolder order-1 order-md-2 py-2 py-md-0">
+                  <a href="https://insoftpro.com/" target="_blank" class="text-dark-50 text-hover-primary">
+                      <img style="height: 35px" src="../../../assets/img/logoinsoft.png">
+
+                  </a>
+              </div>
+          </div>
+      </div>
+
+  </div>
+</div>

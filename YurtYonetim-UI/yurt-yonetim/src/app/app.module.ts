@@ -10,6 +10,7 @@ import { APP_BASE_HREF, registerLocaleData } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './layouts/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
+import {ToastrModule} from "ngx-toastr";
 
 registerLocaleData(localeTr, 'tr-TR');
 
@@ -24,6 +25,9 @@ registerLocaleData(localeTr, 'tr-TR');
       scrollPositionRestoration: 'enabled',
     }),
     ReactiveFormsModule,
+    ToastrModule.forRoot({
+      positionClass:"toast-bottom-right"
+    }),
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' },

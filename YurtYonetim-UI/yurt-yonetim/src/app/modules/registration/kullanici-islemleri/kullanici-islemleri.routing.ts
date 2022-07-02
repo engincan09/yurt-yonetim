@@ -8,8 +8,8 @@ export const KullaniciIslemleriRoutes: Routes = [
       children: [
         {
           path: 'tum-kullanicilar',
-        //   canActivate: [AuthGuardService],
-          data: { pageId: 92 },
+         canActivate: [AuthGuardService],
+          data: { pageId: 5 },
           component: TumKullanicilarComponent,
         },
       ],

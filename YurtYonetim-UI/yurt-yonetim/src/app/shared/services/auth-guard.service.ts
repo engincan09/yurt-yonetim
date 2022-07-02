@@ -9,6 +9,9 @@ import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
 import { HttpService } from "./http.service";
 
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthGuardService implements CanActivate {
   constructor(
     public authService: AuthService,
@@ -41,7 +44,7 @@ export class AuthGuardService implements CanActivate {
         // if (route.data.pageId) {
           this.http
             .get(environment.api, {
-              url: `PagePathPermission/CanActivate(pageId=${route.data.pageId? route.data.pageId: 0})`,
+              url: `PagePermission/CanActivate(pageId=${route.data.pageId? route.data.pageId: 0})`,
               version: '1.0',
               headers: headers
             })
