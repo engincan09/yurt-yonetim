@@ -59,7 +59,6 @@ export class HttpService {
       )
       .pipe(
         timeout(this.timeout),
-        catchError(this.onCatch.bind(env, this)),
         tap(
           (res) => {
             this.onSubscribeSuccess(res);
@@ -87,7 +86,6 @@ export class HttpService {
       )
       .pipe(
         timeout(this.timeout),
-        catchError(this.onCatch.bind(env, this)),
         tap((error: any) => {
           this.onSubscribeError(error);
         }),
@@ -110,7 +108,6 @@ export class HttpService {
       )
       .pipe(
         timeout(this.timeout),
-        catchError(this.onCatch.bind(env, this)),
         tap(
           (res) => {
             this.onSubscribeSuccess(res);
@@ -138,7 +135,6 @@ export class HttpService {
       )
       .pipe(
         timeout(this.timeout),
-        catchError(this.onCatch.bind(env, this)),
         tap(
           (res) => {
             this.onSubscribeSuccess(res);
@@ -161,7 +157,6 @@ export class HttpService {
       )
       .pipe(
         timeout(this.timeout),
-        catchError(this.onCatch.bind(env, this)),
         tap(
           (res) => {
             this.onSubscribeSuccess(res);
@@ -205,9 +200,7 @@ export class HttpService {
       ),
       finalize(() => {
         this.onfinalize();
-      }),
-      catchError((error: any): any => this.toastr.error(error.message, 'HATA'))
-    );
+      }))
   }
 
   nativePost(url: string, body: any, options?: any) {
@@ -397,7 +390,7 @@ export class HttpService {
     error: any,
     caught: Observable<any>
   ): Observable<any> {
-    this.messageService.onCatch(error);
+    //this.messageService.onCatch(error);
     return throwError(error);
   }
 

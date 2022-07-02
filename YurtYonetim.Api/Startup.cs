@@ -31,6 +31,7 @@ using YurtYonetim.Bll.EntityCore.Abstract.Systems;
 using YurtYonetim.Bll.EntityCore.Concrete.Systems;
 using YurtYonetim.Bll.EntityCore.Abstract.Users;
 using YurtYonetim.Bll.EntityCore.Concrete.Users;
+using Microsoft.OpenApi.Models;
 
 namespace YurtYonetim.Api
 {
@@ -124,15 +125,17 @@ namespace YurtYonetim.Api
                 options.ApiVersionReader = new HeaderApiVersionReader("api-version");
             });
 
-            //services.AddSwaggerGen(
-            //    options =>
-            //    {
-            //        // add a custom operation filter which sets default values
-            //        options.OperationFilter<SwaggerDefaultValues>();
-            //        options.CustomSchemaIds(type => type.ToString() + type.GetHashCode());
-            //        // integrate xml comments
-            //        options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml"));
-            //    });
+            services.AddSwaggerGen(
+                options =>
+                {
+                    // add a custom operation filter which sets default values
+                    options.OperationFilter<SwaggerDefaultValues>();
+                    options.CustomSchemaIds(type => type.ToString() + type.GetHashCode());
+                    // integrate xml comments
+                    options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml"));
+                });
+
+
 
             services.AddSpaStaticFiles(configuration =>
             {
@@ -208,6 +211,7 @@ namespace YurtYonetim.Api
             //            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
             //        }
             //    });
+
 
             #region Tüm Scheduler İşlemleri
 

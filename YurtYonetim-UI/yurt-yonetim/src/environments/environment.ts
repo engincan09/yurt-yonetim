@@ -6,9 +6,14 @@ import { Api } from "src/app/shared/core/dto/general.dto";
 
 export const environment = {
   production: false,
-  loginPath: '/giris',
+  isLoading: false,
+  isRfIdConnect: true,
   isRequesting: false,
-  isLoading:false,
+  loginPath: '/giris',
+  isOpenMobileNavbar: false,
+  isSueno: false,
+  isMiniNavbar: true,
+  canTransferTurnsPurchase: true,
   api: <Api>{
     endpoint: 'http://localhost:25558/api',
     token: `${name}-dashboard`,

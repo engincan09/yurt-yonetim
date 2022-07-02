@@ -85,6 +85,19 @@ export class AuthService {
       );
   }
 
+  getAllPage(){
+    return this.http
+    .get(environment.api, {
+      url: 'Page/GetPermissionPage',
+      version: '1.0',
+    })
+    .pipe(
+      map((data) => {      
+        return data;
+      })
+    );
+  }
+
   setAuth(responseLogin: ResponseLogin) {
     // Save JWT sent from server in localstorage
     this.jwtService.saveToken(responseLogin.token);
@@ -109,5 +122,4 @@ export class AuthService {
       .navigate([environment.loginPath])
       .then(() => window.location.reload());
   }
-
 }

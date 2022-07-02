@@ -44,7 +44,7 @@ namespace YurtYonetim.Dal.EfCore.Seed.Systems
                     RouterLink = "/idari-isler",
                     AllRouterLink = "/yonetim/idari-isler",
                     Icon = "fa fa-copy",
-                    MenuShow = false
+                    MenuShow = true
                 },
                 new Page
                 {
@@ -56,7 +56,7 @@ namespace YurtYonetim.Dal.EfCore.Seed.Systems
                     RouterLink = "/kullanici-islemleri",
                     AllRouterLink = "/yonetim/idari-isler/kullanici-islemleri",
                     Icon = "fa fa-user",
-                    MenuShow = false
+                    MenuShow = true
                 },
                 new Page
                 {
