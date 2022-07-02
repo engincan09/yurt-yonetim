@@ -2,8 +2,8 @@
   [ngClass]="{'mini-navbar': environment.isMiniNavbar, 'mobile': environment.isOpenMobileNavbar}">
   <div class="top-header d-flex justify-content-between align-items-center pl-3">
     <a [routerLink]="loginUser?.firstFireLink" class="logo">
-      <img *ngIf="logoImg" alt="Logo" class="py-2"
-        [src]="environment.api.contentRootPath + 'images/w_170/' + logoImg | safe: 'resourceUrl'">
+      <img  alt="Logo" class="py-2"
+      src="../../../../../assets/img/logo.png">
     </a>
     <a class="toggle" (click)="checkMiniNavbar()"></a>
     <button type="button" (click)="openMobileMenu()" class="btn btn btn-primary btn-circle btn-icon w-100 mobile-close">

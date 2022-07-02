@@ -8,8 +8,8 @@ export const RegistrationRoutes: Routes = [
         {
           path: 'kullanici-islemleri',
           loadChildren: () =>
-            import('../../modules/registration/registration.module').then(
-              (m) => m.RegistrationModule
+            import('./kullanici-islemleri/kullanici-islemleri.module').then(
+              (m) => m.KullaniciIslemleriModule
             ),
         },
       ],

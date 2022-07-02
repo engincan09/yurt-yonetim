@@ -5,7 +5,6 @@ import { LoginComponent } from './layouts/login/login.component';
 export const AppRoutes: Routes = [
   {
     path: 'yonetim',
-    canActivate: [AuthGuardService],
     loadChildren: () =>
       import('./layouts/main/main.module').then((m) => m.MainModule),
   },

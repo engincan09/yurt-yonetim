@@ -90,18 +90,10 @@ namespace YurtYonetim.Api.Systems
         public IActionResult CanActivate([FromRoute] int key)
         {
             var page = _service.FindBy(a =>
-                                      (a.UserId == _customHttpContextAccessor.GetUserId() ||
-                                      (a.RoleId.HasValue && _customHttpContextAccessor.GetUserRoleId().Contains(a.RoleId.Value))) &&
-                                       a.PageId == key && a.DataStatus == DataStatus.Activated)
-                                       .OrderByDescending(a => a.Forbidden)
-                                       .Select(a => new
-                                       {
-                                           a.Page.Name,
-                                           BreadCrumb = a.Page.AllName,
-                                           IsAuthority = true,
-                                           a.Forbidden
-                                       })
-                                       .FirstOrDefault();
+            (a.UserId == _customHttpContextAccessor.GetUserId() || (a.RoleId.HasValue && _customHttpContextAccessor.GetUserRoleId().Contains(a.RoleId.Value))) && a.PageId == key && a.DataStatus == DataStatus.Activated)
+                                                .OrderByDescending(a => a.Forbidden)
+                                                .Select(a => new { a.Page.Name, BreadCrumb = a.Page.AllName, IsAuthority = true, a.Forbidden })
+                                                .FirstOrDefault();
 
             if (page != null)
             {

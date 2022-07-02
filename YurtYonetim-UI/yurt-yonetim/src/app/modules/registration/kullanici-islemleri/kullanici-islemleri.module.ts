@@ -14,5 +14,5 @@ import { KullaniciIslemleriRoutes } from './kullanici-islemleri.routing';
     DashboardLayoutModule,
   ]
 })
-export class RegistrationModule { }
+export class KullaniciIslemleriModule { }
 
