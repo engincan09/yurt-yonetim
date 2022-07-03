@@ -1,3 +1,4 @@
+import { ConfirmationDialogService } from './../../../../shared/services/confirmation-dialog.service';
 import { UserService } from './../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -10,7 +11,7 @@ declare var $;
 })
 export class TumKullanicilarComponent implements OnInit {
   users: any[] = [];
-  constructor(private userService: UserService,  private route: ActivatedRoute) {}
+  constructor(private userService: UserService,  private route: ActivatedRoute, private confirmationDialogService:ConfirmationDialogService) {}
 
   ngOnInit() {
     this.userService.getAllUser().subscribe((res) => {
@@ -86,8 +87,13 @@ export class TumKullanicilarComponent implements OnInit {
   }
   delete(e){
     console.log(e,"sa");
-    if(confirm("Are you sure to delete "+name)) {
-      console.log("Implement delete functionality here");
-    }
+    this.openConfirmationDialog();
   }
+
+   openConfirmationDialog() {
+    this.confirmationDialogService.confirm('İşlem Onayı', 'Veriyi silmek istediğinize emin misiniz ?')
+    .then((confirmed) => console.log('User confirmed:', confirmed))
+    .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+  }
+  
 }
