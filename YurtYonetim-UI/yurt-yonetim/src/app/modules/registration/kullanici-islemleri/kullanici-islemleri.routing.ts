@@ -16,4 +16,10 @@ export const KullaniciIslemleriRoutes: Routes = [
     data: { pageId: 6 },
     component: YeniKullaniciComponent,
   },
+  {
+    path: 'yeni-kullanici/:id',
+    canActivate: [AuthGuardService],
+    data: { pageId: 6 },
+    component: YeniKullaniciComponent,
+  },
 ];

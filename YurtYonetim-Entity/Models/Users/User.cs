@@ -48,6 +48,11 @@ namespace YurtYonetim.Entity.Models.Users
         public string Photo { get; set; }
 
         /// <summary>
+        /// Kullanıcı İletişim Numarasıdır.
+        /// </summary>
+        public string PhoneNumber { get; set; }
+
+        /// <summary>
         /// Kullanıcı E-Posta adresi.
         /// </summary>
         [Required, MaxLength(50), EmailAddress]
