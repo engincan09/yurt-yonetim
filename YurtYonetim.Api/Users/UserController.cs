@@ -131,17 +131,37 @@ namespace YurtYonetim.Api.Users
         public IActionResult PostUser([FromBody] User val)
         {
             if (!string.IsNullOrWhiteSpace(val.Username) && _service.FindBy(x => x.DataStatus == DataStatus.Activated && x.Username == val.Username).Any())
-            {
                 return BadRequest(new Response(false, "Bu kullanıcı adı daha önce alınmış. Yeni bir kullanıcı adı giriniz", 5000));
-            }
+
+            if (!string.IsNullOrWhiteSpace(val.Username) && _service.FindBy(x => x.DataStatus == DataStatus.Activated && x.Email == val.Email).Any())
+                return BadRequest(new Response(false, "Bu mail adresine kayıtlı bir kullanıcı daha önceden oluşturulmuş.", 5000));
+
+            if (!string.IsNullOrWhiteSpace(val.Username) && _service.FindBy(x => x.DataStatus == DataStatus.Activated && x.PhoneNumber == val.PhoneNumber).Any())
+                return BadRequest(new Response(false, "Bu telefon numarasına ait kayıtlı bir kullanıcı daha önceden oluşturulmuş.", 5000));
+
 
             val.Password = _service.PasswordHash(val.Password);
-            val.FullName = val.Name + " " + val.Surname;
 
             _service.Add(val);
             _service.Commit();
 
-            return Ok(val);
+            return Ok(new Response(true, "Kullanıcı kaydı oluşturuldu!", 5000));
+        }
+
+        [HttpGet, Route("DeleteUser/{key:int}")]
+        [Authorize]
+        [Produces("application/json")]
+        public IActionResult DeleteUser([FromRoute] int key)
+        {
+            var result = _service.FindBy(a => a.Id == key).FirstOrDefault();
+            if (result == null)
+                return Ok(new Response(false, "Silinecek kullanıcı bulunamadı!"));
+            else
+            {
+                _service.Delete(result);
+                _service.Commit();
+                return Ok(new Response(true, "Silme işlemi başarılıyla gerçekleşti!"));
+            }          
         }
 
         /// <summary>

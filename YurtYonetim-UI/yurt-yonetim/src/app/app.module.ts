@@ -27,7 +27,7 @@ registerLocaleData(localeTr, 'tr-TR');
     ReactiveFormsModule,
     ToastrModule.forRoot({
       positionClass:"toast-bottom-right"
-    }),
+    })
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' },

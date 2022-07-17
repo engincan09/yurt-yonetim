@@ -22,4 +22,28 @@ export class UserService {
         })
       );
   }
+  postUser(model) {
+    return this.http
+      .post(environment.api, {
+        url: 'User/PostUser/',
+        version: '1.0',
+      },model)
+      .pipe(
+        map((data) => {
+          return data;
+        })
+      );
+  }
+  deleteUser(id) {
+    return this.http
+      .get(environment.api, {
+        url: 'User/DeleteUser/'+id,
+        version: '1.0',
+      })
+      .pipe(
+        map((data) => {
+          return data;
+        })
+      );
+  }
 }

@@ -1,3 +1,5 @@
+import { ToastrModule } from 'ngx-toastr';
+import { SharedModule } from './../../../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -9,9 +11,9 @@ import { KullaniciIslemleriRoutes } from './kullanici-islemleri.routing';
 @NgModule({
   declarations: [TumKullanicilarComponent,YeniKullaniciComponent],
   imports: [
-    CommonModule,
+    CommonModule,SharedModule,
     RouterModule.forChild(KullaniciIslemleriRoutes),
-    DashboardLayoutModule,
+    DashboardLayoutModule
   ]
 })
 export class KullaniciIslemleriModule { }

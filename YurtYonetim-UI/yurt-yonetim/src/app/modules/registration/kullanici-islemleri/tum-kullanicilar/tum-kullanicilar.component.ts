@@ -11,12 +11,32 @@ declare var $;
 })
 export class TumKullanicilarComponent implements OnInit {
   users: any[] = [];
-  constructor(private userService: UserService,  private route: ActivatedRoute, private confirmationDialogService:ConfirmationDialogService) {}
+  constructor(
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private confirmationDialogService: ConfirmationDialogService
+  ) {}
 
   ngOnInit() {
+    this.uploadData();
+  }
+
+  delete(id) {
+    if (id) {
+      this.confirmationDialogService
+        .confirm('İşlem Onayı', 'Kullanıcı silmek istediğinize emin misiniz ?')
+        .then((confirmed) => {
+          this.userService.deleteUser(id).subscribe((res) => {
+            this.uploadData();
+          });
+        });
+    }
+  }
+
+  uploadData() {
+    var self = this;
     this.userService.getAllUser().subscribe((res) => {
       this.users = res;
-      var self = this;
       $('#jsGrid1').jsGrid({
         width: '100%',
         height: 300,
@@ -24,9 +44,9 @@ export class TumKullanicilarComponent implements OnInit {
         paging: true,
         pageSize: 10,
         pageButtonCount: 5,
-        deleteConfirm: "Kullanıcıyı silmek istediğinize emin misiniz?",
+        deleteConfirm: 'Kullanıcıyı silmek istediğinize emin misiniz?',
         inserting: false,
-        editing:false,
+        editing: false,
         data: this.users,
         viewrecords: true,
         gridview: true,
@@ -34,38 +54,47 @@ export class TumKullanicilarComponent implements OnInit {
         loadonce: true,
         fields: [
           {
-            type: "control",  width: 60,editButton: false, deleteButton: false, title: 'İşlemler',
-            itemTemplate: function(value, item) {
-                var $iconPencil = $("<i>").attr({class: "fa fa-pencil p-2"});
-                var $iconTrash = $("<i>").attr({class: "fa fa-trash p-2"});
-        
-                var $customEditButton = $("<button>")
-                    .attr({class: "btn btn-warning btn-xs mr-2 d-flex justify-content-center"})
-                    .attr({role: "button"})
-                    .attr({title: "Düzenle"})
-                    .attr({id: "btn-edit-" + item.id})
-                    .click((e) => {
-                      document.location.href =  "yonetim/idari-isler/kullanici-islemleri/yeni-kullanici/"+item.id;  
-                      e.stopPropagation();
-                  })
-                    .append($iconPencil);
-
-
-                var $customDeleteButton = $("<button>")
-                    .attr({class: "btn btn-danger btn-xs"})
-                    .attr({role: "button"})
-                    .attr({title:"Sil"})
-                    .attr({id: "btn-delete-" + item.id})
-                    .click( function(e) {
-                      self.delete(item.id);
-                     })
-                    .append($iconTrash);
-        
-                return $("<div>").attr({class: "btn-toolbar"})
-                    .append($customEditButton)
-                    .append($customDeleteButton);
-            }
-        },
+            type: 'control',
+            width: 60,
+            editButton: false,
+            deleteButton: false,
+            title: 'İşlemler',
+            itemTemplate: function (value, item) {
+              var $iconPencil = $('<i>').attr({ class: 'fa fa-pencil p-2' });
+              var $iconTrash = $('<i>').attr({ class: 'fa fa-trash p-2' });
+  
+              var $customEditButton = $('<button>')
+                .attr({
+                  class:
+                    'btn btn-warning btn-xs mr-2 d-flex justify-content-center',
+                })
+                .attr({ role: 'button' })
+                .attr({ title: 'Düzenle' })
+                .attr({ id: 'btn-edit-' + item.id })
+                .click((e) => {
+                  document.location.href =
+                    'yonetim/idari-isler/kullanici-islemleri/yeni-kullanici/' +
+                    item.id;
+                  e.stopPropagation();
+                })
+                .append($iconPencil);
+  
+              var $customDeleteButton = $('<button>')
+                .attr({ class: 'btn btn-danger btn-xs' })
+                .attr({ role: 'button' })
+                .attr({ title: 'Sil' })
+                .attr({ id: 'btn-delete-' + item.id })
+                .click(function (e) {
+                  self.delete(item.id);
+                })
+                .append($iconTrash);
+  
+              return $('<div>')
+                .attr({ class: 'btn-toolbar' })
+                .append($customEditButton)
+                .append($customDeleteButton);
+            },
+          },
           {
             name: 'fullName',
             type: 'text',
@@ -82,18 +111,9 @@ export class TumKullanicilarComponent implements OnInit {
             title: 'Kullanıcı Adı',
           },
         ],
-      });  
+      });
     });
-  }
-  delete(e){
-    console.log(e,"sa");
-    this.openConfirmationDialog();
-  }
-
-   openConfirmationDialog() {
-    this.confirmationDialogService.confirm('İşlem Onayı', 'Veriyi silmek istediğinize emin misiniz ?')
-    .then((confirmed) => console.log('User confirmed:', confirmed))
-    .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
-  }
   
+  
+  }
 }
