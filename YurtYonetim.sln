@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YurtYonetim.Bll", "YurtYone
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YurtYonetim.Api", "YurtYonetim.Api\YurtYonetim.Api.csproj", "{52DC0E07-3ADE-4A70-BC01-C63248AED4DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YurtYonetim.Dto", "YurtYonetim.Dto\YurtYonetim.Dto.csproj", "{0877330F-4312-4E80-A90C-696586706578}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YurtYonetim.Dto", "YurtYonetim.Dto\YurtYonetim.Dto.csproj", "{0877330F-4312-4E80-A90C-696586706578}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YurtYonetim.Core", "YurtYonetim.Core\YurtYonetim.Core.csproj", "{E0F0C04C-0A67-4C97-A9C9-EA14BE2FDBC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{0877330F-4312-4E80-A90C-696586706578}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0877330F-4312-4E80-A90C-696586706578}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0877330F-4312-4E80-A90C-696586706578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0F0C04C-0A67-4C97-A9C9-EA14BE2FDBC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0F0C04C-0A67-4C97-A9C9-EA14BE2FDBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0F0C04C-0A67-4C97-A9C9-EA14BE2FDBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0F0C04C-0A67-4C97-A9C9-EA14BE2FDBC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -54,21 +54,21 @@ export class LoginComponent implements OnInit {
     this.successMessage = null;
     if (this.loginForm.valid) {
       environment.isRequesting = true;
-      this.authService.login(this.loginForm.value).toPromise().then(res => {
-        if (res.token) {
+      this.authService.login(this.loginForm.value).toPromise().then(res => {     
+        if (res.data.token) {
           if (this.backLink) {
             this.router.navigate([this.backLink]);
           } else {
-            this.router.navigate([res.loginUser.firstFireLink]);
+            this.router.navigate([res.data.loginUser?.firstFireLink]);
           }
           environment.isRequesting = false;
-        } else if (!res.isSuccess) {
-          this.errorMessage = res.error.message;
+        } else if (!res.success) {
+          this.errorMessage = res.messages;
           environment.isRequesting = false;
         }
-      }, (e) => {
-        if (e.error && e.error.error) {
-          this.errorMessage = e.error.error.message;       
+      }, (e) => {        
+        if (!e.error.success) {
+          this.errorMessage = e.error.messages;       
         } else {
           this.errorMessage = 'Sistem hatası! Lütfen daha sonra tekrar deneyin.'
         }

@@ -142,7 +142,7 @@ namespace YurtYonetim.Api.Systems
         /// Tüm Page verilerini getirir.
         /// </summary>
         [HttpGet, Route("GetPermissionPage")]
-        [Authorize]
+ 
         [Produces("application/json")]
         public IActionResult GetPermissionPage()
         {

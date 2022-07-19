@@ -60,10 +60,13 @@ namespace YurtYonetim.Api.Users
         [HttpGet, Route("GetAllUser")]
         [Authorize]
         [Produces("application/json")]
-        public IActionResult GetAllPagePermissions()
+        public IActionResult GetAllUser()
         {
-            var result = _service.FindBy(m => m.DataStatus == Entity.Shared.DataStatus.Activated);
-            return Ok(result);
+            var result = _service.GetAllUser();
+            if (result.Success)
+                return Ok(result);
+            else
+                return BadRequest(result);
         }
 
         /// <summary>
@@ -74,11 +77,11 @@ namespace YurtYonetim.Api.Users
         [Produces("application/json")]
         public IActionResult GetById([FromRoute] int key)
         {
-            var result = _service.FindBy(a => a.Id == key).FirstOrDefault();
-            if (result != null)
+            var result = _service.GetById(key);
+            if (result.Success)
                 return Ok(result);
             else
-                return BadRequest("İstenilen kullanıcı bulunamadı!");
+                return BadRequest(result);
         }
 
         /// <summary>
@@ -89,37 +92,11 @@ namespace YurtYonetim.Api.Users
         [Produces("application/json")]
         public IActionResult LoginUser()
         {
-            int userId = _customHttpContextAccessor.GetUserId().Value;
-            var user = _service.FindBy(a => a.Id == userId && a.DataStatus == DataStatus.Activated)
-                                        .Select(a => new
-                                        {
-                                            a.Id,
-                                            a.Name,
-                                            a.Surname,
-                                            a.Photo,
-                                        })
-                                        .FirstOrDefault();
-
-            var ipAdress = HttpContext.Connection.RemoteIpAddress.ToString();
-            if (user != null)
-            {
-                var userRoleId = _userRoleRepository.FindBy(a => a.UserId == user.Id && a.DataStatus == DataStatus.Activated)
-                    .Select(a => a.RoleId).Distinct().ToArray();
-
-                return Ok(new LoginUser
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Image = user.Photo,
-                    Surname = user.Surname,
-                    IpAddress = ipAdress,
-                    HostName = _service.GetHostName(ipAdress),
-                    //FirstFireLink = _pagePermissionRepository.GetFisrtFireLink(userRoleId),
-                    FirstFireLink = "/yonetim",
-                });
-            }
-
-            return null;
+            var result = _service.LoginUser();
+            if (result.Success)
+                return Ok(result);
+            else
+                return BadRequest(result);
         }
 
         /// <summary>
@@ -130,22 +107,11 @@ namespace YurtYonetim.Api.Users
         [Produces("application/json")]
         public IActionResult PostUser([FromBody] User val)
         {
-            if (!string.IsNullOrWhiteSpace(val.Username) && _service.FindBy(x => x.DataStatus == DataStatus.Activated && x.Username == val.Username).Any())
-                return BadRequest(new Response(false, "Bu kullanıcı adı daha önce alınmış. Yeni bir kullanıcı adı giriniz", 5000));
-
-            if (!string.IsNullOrWhiteSpace(val.Username) && _service.FindBy(x => x.DataStatus == DataStatus.Activated && x.Email == val.Email).Any())
-                return BadRequest(new Response(false, "Bu mail adresine kayıtlı bir kullanıcı daha önceden oluşturulmuş.", 5000));
-
-            if (!string.IsNullOrWhiteSpace(val.Username) && _service.FindBy(x => x.DataStatus == DataStatus.Activated && x.PhoneNumber == val.PhoneNumber).Any())
-                return BadRequest(new Response(false, "Bu telefon numarasına ait kayıtlı bir kullanıcı daha önceden oluşturulmuş.", 5000));
-
-
-            val.Password = _service.PasswordHash(val.Password);
-
-            _service.Add(val);
-            _service.Commit();
-
-            return Ok(new Response(true, "Kullanıcı kaydı oluşturuldu!", 5000));
+            var result = _service.AddUser(val);
+            if (result.Success)
+                return Ok(result);
+            else
+                return BadRequest(result);
         }
 
         [HttpGet, Route("DeleteUser/{key:int}")]
@@ -153,15 +119,11 @@ namespace YurtYonetim.Api.Users
         [Produces("application/json")]
         public IActionResult DeleteUser([FromRoute] int key)
         {
-            var result = _service.FindBy(a => a.Id == key).FirstOrDefault();
-            if (result == null)
-                return Ok(new Response(false, "Silinecek kullanıcı bulunamadı!"));
+            var result = _service.DeleteUser(key);
+            if (result.Success)
+                return Ok(result);
             else
-            {
-                _service.Delete(result);
-                _service.Commit();
-                return Ok(new Response(true, "Silme işlemi başarılıyla gerçekleşti!"));
-            }          
+                return BadRequest(result);
         }
 
         /// <summary>
@@ -171,49 +133,11 @@ namespace YurtYonetim.Api.Users
         [Produces("application/json")]
         public IActionResult Authenticate([FromBody] Login login)
         {
-            var pasifUser = _service.FindBy(a =>
-                                              (a.Email == login.Email || a.Username == login.Email)
-                                           && a.Password == _service.PasswordHash(login.Password)
-                                           && a.DataStatus == DataStatus.DeActivated)
-                                      .FirstOrDefault();
-            if (pasifUser != null)
-                return Ok(new Response(false, "Kullanıcınız pasif durumdadır. Sistem yöneticiniz ile irtibata geçiniz"));
-
-            var user = _service.FindBy(a =>
-                                              (a.Email == login.Email || a.Username == login.Email)
-                                           && a.Password == _service.PasswordHash(login.Password)
-                                           && a.DataStatus == DataStatus.Activated)
-                                      .Select(a => new
-                                      {
-                                          a.Id,
-                                          a.Name,
-                                          a.Surname,
-                                          a.Photo,
-                                      })
-                                      .FirstOrDefault();
-
-            if (user == null)
-                return Ok(new Response(false, "Mevcut parolanız ile girdiğiniz parolanız eşleşmedi."));
-
-            var userRoleId = _userRoleRepository.FindBy(a => a.UserId == user.Id && a.DataStatus == DataStatus.Activated)
-                    .Select(a => a.RoleId).Distinct().ToArray();
-            var ipAdress = HttpContext.Connection.RemoteIpAddress.ToString();
-            var responseLogin = new ResponseLogin
-            {
-                Token = _service.BuildToken(new Token { UserId = user.Id, UserRoleId = userRoleId, FullName = user.Name + " " + user.Surname }),
-                LoginUser = new LoginUser
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Image = user.Photo,
-                    Surname = user.Surname,
-                    IpAddress = ipAdress,
-                    HostName = _service.GetHostName(ipAdress),
-                    //FirstFireLink = _pagePermissionRepository.GetFisrtFireLink(userRoleId)
-                    FirstFireLink = "/yonetim"
-                }
-            };
-            return Ok(responseLogin);
+            var result = _service.Authenticate(login);
+            if (result.Success)
+                return Ok(result);
+            else
+                return BadRequest(result);
         }
 
 

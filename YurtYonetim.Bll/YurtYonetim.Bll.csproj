@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\YurtYonetim.Core\YurtYonetim.Core.csproj" />
     <ProjectReference Include="..\YurtYonetim.Dal\YurtYonetim.Dal.csproj" />
     <ProjectReference Include="..\YurtYonetim.Dto\YurtYonetim.Dto.csproj" />
   </ItemGroup>

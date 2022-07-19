@@ -19,7 +19,7 @@ export class TopBarComponent implements OnInit {
 
   ngOnInit() {
     this.authService.getLoginUser().subscribe((res)=>{
-      this.loginUser = res;
+      this.loginUser = res.data;
     });
   }
 

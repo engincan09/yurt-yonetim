@@ -22,10 +22,10 @@ export class SideBarComponent implements OnInit {
   ngOnInit() {
     environment.isMiniNavbar = false;
     this.authService.getLoginUser().subscribe((res)=>{
-      this.loginUser = res;
+      this.loginUser = res.data;    
     });
 
-    this.authService.getAllPage().subscribe((res)=>{
+    this.authService.getAllPage().subscribe((res)=>{     
       this.preCreateMenu(res, res.find((a) => a.parentId == null).id).then(
         (created) => {
           this.menus = created;
@@ -35,7 +35,6 @@ export class SideBarComponent implements OnInit {
     })
   }
 
-  
   preCreateMenu(menus: Menu[], parentId: number) {
     const newMenu = [];
     menus

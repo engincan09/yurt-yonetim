@@ -9,11 +9,16 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using YurtYonetim.Bll.EntityCore.Abstract.Users;
+using YurtYonetim.Core.Utilities.Results.Abstract;
+using YurtYonetim.Core.Utilities.Results.Concrete;
 using YurtYonetim.Dal.EfCore;
 using YurtYonetim.Dal.EfCore.Concrete;
 using YurtYonetim.Dal.EfCore.Seed.Systems;
 using YurtYonetim.Dal.Middleware;
 using YurtYonetim.Dto.Shared;
+using YurtYonetim.Dto.Systems;
+using YurtYonetim.Entity.Models.Users;
+using YurtYonetim.Entity.Shared;
 
 namespace YurtYonetim.Bll.EntityCore.Concrete.Users
 {
@@ -35,7 +40,7 @@ namespace YurtYonetim.Bll.EntityCore.Concrete.Users
         public UserRepository(YurtYonetimContext context,
             IConfiguration configuration,
             IUserRoleRepository userRoleRepository,
-            ICustomHttpContextAccessor customHttpContextAccessor) : base(context)     
+            ICustomHttpContextAccessor customHttpContextAccessor) : base(context)
         {
             _configuration = configuration;
             _userRoleRepository = userRoleRepository;
@@ -155,6 +160,166 @@ namespace YurtYonetim.Bll.EntityCore.Concrete.Users
 
             List<string> compName = GetIPHost.HostName.ToString().Split('.').ToList();
             return compName.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Aktif olan tüm kullanıcı listesini döner
+        /// </summary>
+        /// <returns></returns>
+        public IDataResult<IQueryable<User>> GetAllUser()
+        {
+            var result = FindBy(m => m.DataStatus == DataStatus.Activated);
+            return new SuccessDataResult<IQueryable<User>>(result);
+        }
+
+        /// <summary>
+        /// Tekil bilgisine göre kullanıcıyı getirir.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IDataResult<User> GetById(int id)
+        {
+            var result = FindBy(m => m.DataStatus == DataStatus.Activated &&
+                                     m.Id == id)
+                         .FirstOrDefault();
+
+            if (result != null)
+                return new SuccessDataResult<User>(result);
+            else
+                return new ErrorDataResult<User>(null, "Kullanıcı bulunamadı!");
+        }
+
+        /// <summary>
+        /// Giriş yapan kullanıcı bilgilerini döndürür.
+        /// </summary>
+        public IDataResult<LoginUser> LoginUser()
+        {
+            int userId = _customHttpContextAccessor.GetUserId().Value;
+            var user = FindBy(a => a.Id == userId && a.DataStatus == DataStatus.Activated)
+                                        .Select(a => new
+                                        {
+                                            a.Id,
+                                            a.Name,
+                                            a.Surname,
+                                            a.Photo,
+                                        })
+                                        .FirstOrDefault();
+
+            var ipAdress = HttpContext.Connection.RemoteIpAddress.ToString();
+            if (user != null)
+            {
+                var userRoleId = _userRoleRepository.FindBy(a => a.UserId == user.Id && a.DataStatus == DataStatus.Activated)
+                    .Select(a => a.RoleId).Distinct().ToArray();
+
+                var result = new LoginUser
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Image = user.Photo,
+                    Surname = user.Surname,
+                    IpAddress = ipAdress,
+                    HostName = GetHostName(ipAdress),
+                    //FirstFireLink = _pagePermissionRepository.GetFisrtFireLink(userRoleId),
+                    FirstFireLink = "/yonetim",
+                };
+
+                return new SuccessDataResult<LoginUser>(result);
+            }
+            return new SuccessDataResult<LoginUser>(null,"Giriş yapan kullanıcının bilgileri bulunamadı!");
+        }
+
+        /// <summary>
+        /// Yeni kullanıcı kaydı
+        /// </summary>
+        public IResult AddUser(User user)
+        {
+            if (!string.IsNullOrWhiteSpace(user.Username) && FindBy(x => x.DataStatus == DataStatus.Activated && x.Username == user.Username).Any())
+                return new ErrorResult("Bu kullanıcı adı daha önce alınmış. Yeni bir kullanıcı adı giriniz");
+
+            if (!string.IsNullOrWhiteSpace(user.Username) && FindBy(x => x.DataStatus == DataStatus.Activated && x.Email == user.Email).Any())
+                return new ErrorResult("Bu mail adresine kayıtlı bir kullanıcı daha önceden oluşturulmuş.");
+
+            if (!string.IsNullOrWhiteSpace(user.Username) && FindBy(x => x.DataStatus == DataStatus.Activated && x.PhoneNumber == user.PhoneNumber).Any())
+                return new ErrorResult("Bu telefon numarasına ait kayıtlı bir kullanıcı daha önceden oluşturulmuş");
+
+            user.Password = PasswordHash(user.Password);
+
+            Add(user);
+            Commit();
+
+            return new SuccessResult("Kullanıcı kaydı başarılı şekilde oluşturuldu!");
+        }
+
+        /// <summary>
+        /// Kullanıcı kaydını siler
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IResult DeleteUser(int id)
+        {
+            var result = FindBy(a => a.Id == id).FirstOrDefault();
+            if (result == null)
+                return new ErrorResult("Silinecek kullanıcı bulunamadı!");
+
+            else
+            {
+                Delete(result);
+                Commit();
+                return new SuccessResult("Silme işlemi başarılı!");
+
+            }
+        }
+
+        /// <summary>
+        /// Kullanıcıyı login yapar
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public IDataResult<ResponseLogin> Authenticate(Login login)
+        {
+            var pasifUser = FindBy(a =>
+                                               (a.Email == login.Email || a.Username == login.Email)
+                                            && a.Password == PasswordHash(login.Password)
+                                            && a.DataStatus == DataStatus.DeActivated)
+                                       .FirstOrDefault();
+            if (pasifUser != null)
+                return new ErrorDataResult<ResponseLogin>(null, "Kullanıcınız pasif durumdadır. Sistem yöneticiniz ile irtibata geçiniz");
+
+            var user = FindBy(a =>
+                                              (a.Email == login.Email || a.Username == login.Email)
+                                           && a.Password == PasswordHash(login.Password)
+                                           && a.DataStatus == DataStatus.Activated)
+                                      .Select(a => new
+                                      {
+                                          a.Id,
+                                          a.Name,
+                                          a.Surname,
+                                          a.Photo,
+                                      })
+                                      .FirstOrDefault();
+
+            if (user == null)
+                return new ErrorDataResult<ResponseLogin>(null, "Mevcut parolanız ile girdiğiniz parolanız eşleşmedi.");
+
+            var userRoleId = _userRoleRepository.FindBy(a => a.UserId == user.Id && a.DataStatus == DataStatus.Activated)
+                    .Select(a => a.RoleId).Distinct().ToArray();
+            var ipAdress = HttpContext.Connection.RemoteIpAddress.ToString();
+            var responseLogin = new ResponseLogin
+            {
+                Token = BuildToken(new Token { UserId = user.Id, UserRoleId = userRoleId, FullName = user.Name + " " + user.Surname }),
+                LoginUser = new LoginUser
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Image = user.Photo,
+                    Surname = user.Surname,
+                    IpAddress = ipAdress,
+                    HostName = GetHostName(ipAdress),
+                    //FirstFireLink = _pagePermissionRepository.GetFisrtFireLink(userRoleId)
+                    FirstFireLink = "/yonetim"
+                }
+            };
+            return new SuccessDataResult<ResponseLogin>(responseLogin);
         }
     }
 }

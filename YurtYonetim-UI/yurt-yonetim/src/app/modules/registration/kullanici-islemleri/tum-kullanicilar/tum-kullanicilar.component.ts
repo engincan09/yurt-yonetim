@@ -36,7 +36,7 @@ export class TumKullanicilarComponent implements OnInit {
   uploadData() {
     var self = this;
     this.userService.getAllUser().subscribe((res) => {
-      this.users = res;
+      this.users = res.data;
       $('#jsGrid1').jsGrid({
         width: '100%',
         height: 300,

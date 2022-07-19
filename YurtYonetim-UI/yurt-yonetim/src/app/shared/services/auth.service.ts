@@ -56,7 +56,7 @@ export class AuthService {
       .pipe(
         map(
           (res) => {
-            this.setAuth(res);
+            this.setAuth(res.data);
             return res;
           },
           (err: any) => err
@@ -64,7 +64,7 @@ export class AuthService {
       );
   }
 
-  getLoginUser(): Observable<LoginUser> {
+  getLoginUser() {
     return this.http
       .get(environment.api, {
         url: 'User/LoginUser',
