@@ -9,6 +9,15 @@
           <form id="quickForm"  [formGroup]="userForm">
             <div class="card-body">
               <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputName">Fotoğraf *</label>
+                    <in-image-cropper [(value)]="photo" [aspectRatio]="(23 / 28)" [resizeToWidth]="250"
+                    [required]="false" [popupHeight]="650" [popupWidth]="800" [openHelper]="true"
+                    requiredMessage="Lütfen fotoğrafınızı yükleyin."
+                    [helperData]="{photoWidth: '23mm', photoHeight: '28mm', faceCircle: '22mm', faceCircleDot: '20mm'}"></in-image-cropper>
+                  </div>
+                </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="exampleInputName">Ad *</label>

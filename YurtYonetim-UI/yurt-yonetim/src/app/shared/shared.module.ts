@@ -1,3 +1,6 @@
+import { HelpersService } from './services/helpers.service';
+import { DocsService } from './services/docs.service';
+import { InImageCropperComponent } from './tools/in-image-cropper/in-image-cropper.component';
 import { ConfirmationDialogComponent } from './tools/confirmation-dialog/confirmation-dialog.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -18,15 +21,17 @@ import { ConfirmationDialogService } from './services/confirmation-dialog.servic
     ],
     declarations: [
         InLoadingPopupComponent,
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
+        InImageCropperComponent
     ],
-    providers: [ ConfirmationDialogService ],
+    providers: [ ConfirmationDialogService, DocsService,HelpersService ],
     exports: [
         CommonModule,
         FormsModule,
         RouterModule,
         ReactiveFormsModule,
         InLoadingPopupComponent,
+        InImageCropperComponent
     ],
     entryComponents: [ ConfirmationDialogComponent ],
 

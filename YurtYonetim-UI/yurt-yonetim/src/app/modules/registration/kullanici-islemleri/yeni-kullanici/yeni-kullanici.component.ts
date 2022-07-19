@@ -12,6 +12,7 @@ declare var $;
 export class YeniKullaniciComponent implements OnInit {
   userForm: FormGroup;
   user: User = new User();
+  photo;
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
